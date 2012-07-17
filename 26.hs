@@ -14,11 +14,8 @@ nubList (x:xs) = if any (isListEq x) xs then nubList xs
                  else x : nubList xs
 
 combination :: [Int] -> Int -> [[Int]]
-combination n k = nubList $ combination' n k
-
-combination' :: [Int] -> Int -> [[Int]]
-combination' n 0 = [n]
-combination' n k = map (take k) $ concat [map ((n !! i):) (combination (removeAt (i + 1) n) (k - 1)) | i <- [0..length n -1]]
+combination n 0 = [n]
+combination n k = map (take k) $ concat [map ((n !! i):) (nubList $ combination (removeAt (i + 1) n) (k - 1)) | i <- [0..length n -1]]
 
 removeAt :: Int -> [Int] -> [Int]
 removeAt _    []   = []
