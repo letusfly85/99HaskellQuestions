@@ -19,9 +19,6 @@ goldBach :: (Integral a) => a -> (a,a)
 goldBach n = if odd n then error "argument should be an even number." else
              let m = n `div` 2
                  (pre,lst) = (primeFactors 2 m, primeFactors (m+2) n)
-             in goldBach' (reverse pre) lst
-   where goldBach' (x:xs) lst = let res = filter (\y -> y + x == n) lst
-                                in  if  length res > 0 then
-                                        (x, head res)
-                                    else
-                                        goldBach' xs lst
+             in goldBach' pre lst
+   where goldBach' pre lst = head $ filter (\(p,l) -> p + l == n) $
+                             [(p,l) | p <- pre, l <- lst]
