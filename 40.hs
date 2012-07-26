@@ -1,3 +1,7 @@
+{-
+ - answer:http://www.haskell.org/haskellwiki/99_questions/Solutions/40
+ -}
+
 isPrime :: (Integral a) => a -> Bool
 isPrime 0 = False
 isPrime 1 = False
