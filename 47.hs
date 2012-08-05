@@ -16,9 +16,9 @@ nand' a b | a `and'` b = False
           | otherwise  = True
 
 xor'  :: Bool -> Bool -> Bool
-xor' a b  | a `and'` b = False
-          | a `or'`  b = True
-          | otherwise  = False
+xor' a b  | a `and'` b          = False
+          | not a `and'`  not b = False
+          | otherwise  = True
 
 nor'  :: Bool -> Bool -> Bool
 nor' a b  | a `or'` b = False
