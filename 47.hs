@@ -29,9 +29,10 @@ impl' a b | a `and'` b = True
           | b          = False
           | otherwise  = True
 
-eq'   :: Bool -> Bool -> Bool
-eq'   a b | a `xor'` b = True
-          | otherwise  = False
+equ'  :: Bool -> Bool -> Bool
+equ'  a b | a `and'` b         = True
+          | not a `and'` not b = True
+          | otherwise          = False
 
 infixl 4 `or'`
 infixl 6 `and'`
