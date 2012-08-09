@@ -40,16 +40,18 @@ compTree 1 = leaf 0
 compTree n = compTree' $ splitRange $ fst $ getRange n
     where compTree' list = if   length list /= 1 then compTree' $ tree2TuppleList $ map getNode list
                            else getNode $ head list
-compTree' :: Int -> [Int] -> Tree Int
-compTree' 1 patterns = leaf 0
-compTree' n patterns = compTree'' $ splitRange' (fst $ getRange n) patterns
+
+compTree' :: Int -> [Tree Int]
+compTree' 1 = [leaf 0]
+compTree' n = let (patternList,(idxStart,idxEnd)) = treePattern n
+              in  map (\x -> compTree'' $ splitRange' (snd $ getRange n) x) patternList
     where compTree'' list = if  length list /= 1 then compTree'' $ tree2TuppleList $ map getNode list
                            else getNode $ head list
 
 treePattern :: Int -> ([[Int]],(Int,Int))
 treePattern n = let (s,l) = getRange n
                 in  if snd s == n then ([[1]],s)
-                    else (combination [1..(fst l)] (n - snd s) , s)
+                    else (combination ([[fst l..snd l] !! i | i <- [0,1..(fst l)-1]]) (n - snd s) , s)
 
 data Tree a = Empty | Branch a (Tree a) (Tree a)
     deriving (Show, Eq)
