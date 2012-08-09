@@ -15,6 +15,17 @@ splitRange :: (Int,Int) -> [(Tree Int,Tree Int)]
 splitRange (f,s) = let m = (s+1-f) `div` 2
                    in  foldr (\x ys -> (leaf (f+2*x),leaf (f+2*x+1)):ys) [] [0..m-1]
 
+splitRange' :: (Int,Int) -> [Int] -> [(Tree Int, Tree Int)]
+splitRange' (f,s) list = let m = (s+1-f) `div` 2
+                         in  foldr fnc [] [0..m-1]
+    where fnc x ys = let (k,m)   = (f+2*x,f+2*x+1)
+                         (k',m') = (k `elem` list, m `elem` list)
+                     in  (fnc2 k k',fnc2 m m'):ys
+          fnc2 p flg = if flg then
+                         Branch p (leaf 0) (leaf 0)
+                       else
+                         leaf p
+
 getNode :: (Tree Int, Tree Int) -> Tree Int
 getNode ((Branch x t1 t2),(Branch y t3 t4)) = Branch (x `div` 2) (Branch x t1 t2) (Branch y t3 t4)
 
@@ -29,12 +40,16 @@ compTree 1 = leaf 0
 compTree n = compTree' $ splitRange $ fst $ getRange n
     where compTree' list = if   length list /= 1 then compTree' $ tree2TuppleList $ map getNode list
                            else getNode $ head list
+compTree' :: Int -> [Int] -> Tree Int
+compTree' 1 patterns = leaf 0
+compTree' n patterns = compTree'' $ splitRange' (fst $ getRange n) patterns
+    where compTree'' list = if  length list /= 1 then compTree'' $ tree2TuppleList $ map getNode list
+                           else getNode $ head list
 
 treePattern :: Int -> ([[Int]],(Int,Int))
 treePattern n = let (s,l) = getRange n
                 in  if snd s == n then ([[1]],s)
                     else (combination [1..(fst l)] (n - snd s) , s)
-
 
 data Tree a = Empty | Branch a (Tree a) (Tree a)
     deriving (Show, Eq)
