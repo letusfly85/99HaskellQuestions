@@ -24,3 +24,12 @@ constructT (x:list) = let (lList,rList) = (evenList list, oddList list)
 
 oddList list  = [ list !! idx | idx <- take (length list `div` 2) $ filter odd  [0..]]
 evenList list = [ list !! idx | idx <- take ((length list + 1) `div` 2) $ filter even [0..]]
+
+addTree :: (Ord a) => a -> Tree a -> Tree a
+addTree x Empty = Branch x Empty Empty
+addTree x t@(Branch n l r) = case compare x n of
+            LT -> Branch n (addTree x l) r
+            GT -> Branch x l (addTree n r)
+            EQ -> t
+
+construct xs = foldl (flip addTree) Empty xs
