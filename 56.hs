@@ -38,9 +38,15 @@ splitTree t = if not $ isEndNode t && isChildSymmetric t then
               else
                  []
 
-isSymmetric :: Tree a -> Bool
-isSymmetric t = if isChildSymmetric t then
+isCompTree :: Tree a -> Bool
+isCompTree t = if isChildSymmetric t then
                     let lt = splitTree t
                     in  if length lt == 0 then True
-                        else any (\x -> x) $ map isSymmetric lt
-                else False
+                        else any (\x -> x) $ map isCompTree lt
+               else False
+
+
+isSymmetric :: Tree a -> Tree a -> Tree a -> Bool
+isSymmetric _ l r = isMirror l r
+    where isMirror Empty Empty = True
+          isMirror (Branch _ a b) (Branch _ x y) = isMirror a y && isMirror x b
